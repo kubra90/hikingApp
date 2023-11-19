@@ -16,9 +16,16 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        //The resValue line you add here will create a string resource named
+        // GOOGLE_MAPS_API_KEY with a value that is taken from your gradle.properties file.
+        resValue("string", "GOOGLE_MAPS_API_KEY", ((project.findProperty("GOOGLE_MAPS_API_KEY") ?: "No Key").toString()))
+
+
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+
         }
     }
 
