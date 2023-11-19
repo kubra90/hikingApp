@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+    id("org.jetbrains.kotlin.plugin.serialization") // Apply Kotlin Serialization plugin
 }
 
 android {
@@ -49,7 +51,7 @@ android {
 dependencies {
 
 
-//    add google map dependecy
+    // add google map dependecy. I'm not sure whether it should be here or not!
     implementation("com.google.android.gms:play-services-maps:17.0.1")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
@@ -59,6 +61,16 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    //Kotlin serialization Converter for Retrofit
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    // Kotlin Serialization library
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.10")
+
+    // OkHttp3. is used for handling HTTP requests and responses.
+    // The logging interceptor is particularly useful during development as it can log the details of network requests and responses.
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -66,4 +78,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+
 }
