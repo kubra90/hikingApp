@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 
     id("org.jetbrains.kotlin.plugin.serialization") // Apply Kotlin Serialization plugin
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -18,8 +19,9 @@ android {
 
         //The resValue line you add here will create a string resource named
         // GOOGLE_MAPS_API_KEY with a value that is taken from your gradle.properties file.
-        resValue("string", "GOOGLE_MAPS_API_KEY", ((project.findProperty("GOOGLE_MAPS_API_KEY") ?: "No Key").toString()))
-
+//        resValue("string", "GOOGLE_MAPS_API_KEY", ((project.findProperty("GOOGLE_MAPS_API_KEY") ?: "No Key").toString()))
+        buildConfigField("String", "MAPS_API_KEY", "\"${properties["MAPS_API_KEY"]}\"")
+        manifestPlaceholders["MAPS_API_KEY"] = "Any Text Here"
 
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -44,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -59,7 +62,7 @@ dependencies {
 
 
     // add google map dependecy. I'm not sure whether it should be here or not!
-    implementation("com.google.android.gms:play-services-maps:17.0.1")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.0")
@@ -73,11 +76,16 @@ dependencies {
     //Kotlin serialization Converter for Retrofit
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     // Kotlin Serialization library
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.10")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     // OkHttp3. is used for handling HTTP requests and responses.
     // The logging interceptor is particularly useful during development as it can log the details of network requests and responses.
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.compose.ui:ui-graphics-android:1.5.4") // Use the latest version
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
