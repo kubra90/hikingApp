@@ -1,5 +1,7 @@
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 
 data class PlaceResponse(
     @SerialName("html_attributions")
@@ -9,6 +11,7 @@ data class PlaceResponse(
     val results: List<PlaceResult>,
     val status: String,
 )
+
 
 data class PlaceResult(
     @SerialName("business_status")
@@ -36,15 +39,18 @@ data class PlaceResult(
     val vicinity: String,
 )
 
+
 data class Geometry(
     val location: Location,
     val viewport: Viewport,
 )
 
+
 data class Location(
     val lat: Double,
     val lng: Double,
 )
+
 
 data class Viewport(
     val northeast: Northeast,
@@ -56,15 +62,18 @@ data class Northeast(
     val lng: Double,
 )
 
+
 data class Southwest(
     val lat: Double,
     val lng: Double,
 )
 
+
 data class OpeningHours(
     @SerialName("open_now")
     val openNow: Boolean,
 )
+
 
 data class Photo(
     val height: Long,
@@ -74,6 +83,7 @@ data class Photo(
     val photoReference: String,
     val width: Long,
 )
+
 
 data class PlusCode(
     @SerialName("compound_code")

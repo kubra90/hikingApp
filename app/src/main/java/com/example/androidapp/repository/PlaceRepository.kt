@@ -1,6 +1,7 @@
 package com.example.androidapp.repository
 
 import PlaceResponse
+import android.util.Log
 import com.example.androidapp.BuildConfig
 import com.example.androidapp.model.Place
 import com.example.androidapp.network.PlaceApiService
@@ -30,7 +31,8 @@ class PlaceRepository(private val geocodingRepository: GeocodingRepository) {
             address,
             onSuccess = { lat, lng ->
 
-                val location = "$lat,$lng"
+                val location = "$lat%2C$lng"
+
                 val apiKey = BuildConfig.MAPS_API_KEY
                 val type = "tourist_attraction"
                 val keyword = "hiking trails"
@@ -66,9 +68,12 @@ class PlaceRepository(private val geocodingRepository: GeocodingRepository) {
                     }
                 })
             },
+
             onError = {
                 onError("Error fetching coordinates: $it")
             }
         )
     }
 }
+
+
