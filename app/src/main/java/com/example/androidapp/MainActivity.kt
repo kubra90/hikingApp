@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
         }
         }
 
+    //what this code do?
     class MyViewModelFactory(private val repository: PlaceRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MyViewModel::class.java)) {
@@ -114,7 +115,8 @@ fun MyComposeContent(viewModel: MyViewModel) {
             Text("Search")
         }
 
-        if (!isLoading) {
+        //check this or remove this part!
+        if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.padding(16.dp))
         }
 
