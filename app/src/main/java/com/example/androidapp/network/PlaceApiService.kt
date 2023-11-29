@@ -11,14 +11,16 @@ interface PlaceApiService {
 //        private const val type = "tourist_attraction"
 //    }
 
+
+
     //this below code is for getting place information
     @GET("maps/api/place/nearbysearch/json")
-    fun getPlaces(
+    suspend fun getPlaces(
         @Query("location") address: String,
         @Query("key") apiKey: String,
         @Query("type") type: String,
         @Query("keyword") keyword: String,
         @Query("radius") radius: Int?,  //this is optional query parameter
 
-    ): Call<PlaceResponse>
+    ): PlaceResponse
 }

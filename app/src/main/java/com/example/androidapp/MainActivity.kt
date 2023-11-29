@@ -1,9 +1,10 @@
+
 package com.example.androidapp
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,57 +25,59 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.androidapp.model.Place
+import android.util.Log
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.androidapp.repository.GeocodingRepository
 import com.example.androidapp.repository.PlaceRepository
-import com.example.androidapp.ui.theme.AndroidAppTheme
+//import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidapp.viewmodel.MyViewModel
-import android.util.Log
+import com.example.androidapp.ui.theme.AndroidAppTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+
+// ...imports and class declaration
+
 
 
 class MainActivity : ComponentActivity() {
 
-    private val TAG = "MyApp"
-
-
-    private lateinit var geocodingRepository: GeocodingRepository
-    private lateinit var placeRepository: PlaceRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        geocodingRepository = GeocodingRepository()
-        placeRepository = PlaceRepository(geocodingRepository)
-
         setContent {
+            val factory = MyViewModelFactory(PlaceRepository(GeocodingRepository()))
+            val viewModel: MyViewModel by viewModels { factory }
             AndroidAppTheme {
-                // Use a ViewModel to manage UI state
-                val viewModel = remember { MyViewModel(placeRepository) }
 
-
-                MyComposeContent(
-                    viewModel,
-                    viewModel.places,
-                    viewModel.dataLoaded,
-                    viewModel::onDataLoaded
-                )
+                MyComposeContent(viewModel = viewModel)
             }
         }
+        }
+
+    class MyViewModelFactory(private val repository: PlaceRepository) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(MyViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return MyViewModel(repository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
-}
+    }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyComposeContent(
-    viewModel: MyViewModel,
-    places: List<Place>,
-    dataLoaded: Boolean,
-    onDataLoaded: (List<Place>, Boolean) -> Unit
-) {
+fun MyComposeContent(viewModel: MyViewModel) {
     var location by remember { mutableStateOf("") }
     var radius by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
-    var isError by remember { mutableStateOf(false) }
+
+    val places = viewModel.places
+    val dataLoaded = viewModel.dataLoaded
+    val errorMessage = viewModel.errorMessage
 
     Column(
         modifier = Modifier
@@ -92,79 +96,58 @@ fun MyComposeContent(
             onValueChange = { radius = it },
             label = { Text("Radius!") },
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number // Specify a numeric keyboard
+                keyboardType = KeyboardType.Number
             )
         )
+
         Button(
             onClick = {
                 val address = location
                 val distance = radius.toIntOrNull()
-                // Fetch places using ViewModel
                 if (address.isNotEmpty() && distance != null) {
                     isLoading = true
-                    isError = false
-
-                    viewModel.fetchPlaces(
-                        address,
-                        distance,
-                        onSuccess = { places->
-                            isLoading = false
-                            onDataLoaded(places, true)
-
-                        },
-                        onError = {
-                            isLoading = false
-                            isError = true
-                        }
-                    )
-                } else {
-                    isError = true
+                    viewModel.fetchPlaces(address, distance)
                 }
             },
-            modifier = Modifier
-                .padding(top = 16.dp)
+            modifier = Modifier.padding(top = 16.dp)
         ) {
             Text("Search")
         }
-        if (isLoading) {
+
+        if (!isLoading) {
             CircularProgressIndicator(modifier = Modifier.padding(16.dp))
         }
 
         // Display the list of places when data is loaded
-        if (dataLoaded && !isLoading && !isError) {
-            if (places.isNotEmpty()) {
+        if (dataLoaded && isLoading) {
+            Log.d("loading", "loading status is${!isLoading}")
+         if (places.isNotEmpty()) {
+             Log.d("view", "$places")
                 Column {
                     Text("Places found:")
-//                    Log.d(TAG, "debug message")
                     places.forEach { place ->
                         Text("Name: ${place.name}, Rating: ${place.rating}")
+                        Log.d("TAG","Name: ${place.name}")
+                        println("Name: ${place.name}")
                     }
-                }
-            } else {
-                Log.d(TAG, "debug message")
-                Text("No palces found!")
+              }
             }
+            else {
+                Text("No places found!")
+            }
+        }
+
+        if (errorMessage.isNotEmpty()) {
+            Text("Err: $errorMessage")
         }
     }
 }
+// ... rest of the code
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun MyPreview() {
+    val viewModel = MyViewModel(PlaceRepository(GeocodingRepository()))
 
-    //check with sample data
-//    val samplePlaces = listOf(
-//    Place("Place 1", 4.5, 100, true),
-//    Place("Place 2", 3.8, 80, true)
-//    )
-    MyComposeContent(
-        viewModel = MyViewModel(placeRepository = PlaceRepository(geocodingRepository = GeocodingRepository())),
-        places = emptyList(), // Initialize with an empty list of places
-//        places =samplePlaces,
-        dataLoaded = false, // Set dataLoaded to false
-//        dataLoaded = true,
-        onDataLoaded = { _, _ -> }
-    )
+    MyComposeContent(viewModel = viewModel)
 }
-
-

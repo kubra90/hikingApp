@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 
     id("org.jetbrains.kotlin.plugin.serialization") // Apply Kotlin Serialization plugin
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+//    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -35,7 +35,13 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+//            isDebuggable = true
         }
+
+//        debug {
+////            applicationIdSuffix=".debug"
+//            isDebuggable=true
+//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -51,6 +57,8 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
     }
+
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -82,9 +90,9 @@ dependencies {
     // The logging interceptor is particularly useful during development as it can log the details of network requests and responses.
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-    implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.compose.ui:ui-graphics-android:1.5.4") // Use the latest version
+//    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+//    implementation("com.google.android.material:material:1.10.0")
+//    implementation("androidx.compose.ui:ui-graphics-android:1.5.4") // Use the latest version
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -96,9 +104,13 @@ dependencies {
 
 //    new
 
-    implementation("androidx.compose.foundation:foundation:1.5.4") // Use the appropriate version
-    implementation("androidx.compose.material3:material3:1.1.2")
+//    implementation("androidx.compose.foundation:foundation:1.5.4") // Use the appropriate version
+//    implementation("androidx.compose.material3:material3:1.1.2")
 
+   //coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-rc01")
 
 
 
