@@ -4,6 +4,9 @@ plugins {
 
     id("org.jetbrains.kotlin.plugin.serialization") // Apply Kotlin Serialization plugin
 //    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
+    //updated
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -111,7 +114,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-rc01")
-
+    //navigation dependency
+    implementation("androidx.navigation:navigation-compose:2.4.0-beta02") // Use the latest version
 
 
 }

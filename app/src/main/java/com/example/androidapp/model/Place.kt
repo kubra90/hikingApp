@@ -7,4 +7,6 @@ data class Place(
     val rating: Double,
     val userRatingsTotal: Long,
 //    val openingHours: OpeningHours?
+    val latitude: Double,
+    val longitude: Double
 )

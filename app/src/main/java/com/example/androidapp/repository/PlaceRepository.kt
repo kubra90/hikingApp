@@ -59,6 +59,8 @@ class PlaceRepository(private val geocodingRepository: GeocodingRepository) {
                                 rating = placeResult.rating,
                                 userRatingsTotal = placeResult.userRatingsTotal,
 //                                openingHours = placeResult.openingHours
+                                latitude = placeResult.geometry.location.lat,
+                                longitude = placeResult.geometry.location.lng
                             )
 
                         }
